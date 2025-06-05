@@ -3,8 +3,10 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
+import { useRouter } from "next/navigation";
 import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
+import { register } from '@/app/actions/register';
 
 const SignUpPage: NextPage = () => {
     const [name, setName] = useState('');
@@ -13,16 +15,28 @@ const SignUpPage: NextPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const router = useRouter();
+    const ref = useRef<HTMLFormElement>(null);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log('Sign up data:', { name, email, password });
+            const formData = new FormData(e.currentTarget);
+            const res = await register({
+                name: formData.get("name"),
+                email: formData.get("email"),
+                password: formData.get("password")
+            });
+            ref.current?.reset();
+            if (res?.error) {
+                setError(res.error);
+                return;
+            } else {
+                return router.push("/auth/signin");
+            }
             // Handle successful sign up (e.g., redirect)
         } catch (err) {
             setError('Registration failed. Please try again.');

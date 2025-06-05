@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 
 const SignInPage: NextPage = () => {
