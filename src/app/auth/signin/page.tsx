@@ -1,8 +1,10 @@
 'use client'
 import { NextPage } from 'next';
 import Head from 'next/head';
+import { signIn } from "next-auth/react";
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from 'react';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 
 const SignInPage: NextPage = () => {
@@ -11,19 +13,30 @@ const SignInPage: NextPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError('');
-
         try {
             // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const formData = new FormData(e.currentTarget);
+            const res = await signIn("credentials", {
+                email: formData.get("email"),
+                password: formData.get("password"),
+                redirect: false,
+            });
+            if (res?.error) {
+                setError(res.error as string);
+            }
+            if (res?.ok) {
+                return router.push("/");
+            }
             console.log('Sign in data:', { email, password });
-            // Handle successful sign in (e.g., redirect)
         } catch (err) {
-            setError('Invalid email or password');
+            console.error(err);
+            setError("An unexpected error occurred.");
         } finally {
             setLoading(false);
         }
@@ -49,7 +62,7 @@ const SignInPage: NextPage = () => {
                 </h2>
             </div>
 
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md mx-6">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     {error && (
                         <div className="mb-4 rounded-md bg-red-50 p-4">
