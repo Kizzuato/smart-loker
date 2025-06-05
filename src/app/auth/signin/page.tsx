@@ -31,7 +31,7 @@ const SignInPage: NextPage = () => {
                 setError(res.error as string);
             }
             if (res?.ok) {
-                return router.push("/admin/dashboard");
+                return router.push("/admin");
             }
             console.log('Sign in data:', { email, password });
         } catch (err) {
