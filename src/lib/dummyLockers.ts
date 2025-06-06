@@ -10,4 +10,5 @@ export const dummyLockers: Locker[] = [
   { id: 3, label: 'Loker 3', status: 'rusak' },
   { id: 4, label: 'Loker 4', status: 'kosong' },
   { id: 5, label: 'Loker 5', status: 'terisi' },
+  { id: 6, label: 'Loker 6', status: 'kosong' },
 ]

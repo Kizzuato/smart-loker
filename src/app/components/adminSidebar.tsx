@@ -9,7 +9,7 @@ interface Props {
 
 const menu = [
   { label: 'Dashboard', href: '/admin' },
-  { label: 'Monitoring Loker', href: '/admin/monitoring' },
+  // { label: 'Monitoring Loker', href: '/admin/monitoring' },
   { label: 'Pengguna', href: '/admin/users' },
 ]
 

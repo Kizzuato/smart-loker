@@ -3,6 +3,7 @@
 import { Menu, User } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 interface Props {
   onToggle: () => void
@@ -51,8 +52,25 @@ export default function Navbar({ onToggle }: Props) {
             <button
               onClick={() => {
                 // logic logout
-                alert('Logged out!')
-                return router.push("/");
+                Swal.fire({
+                  title: "Anda Yakin?",
+                  text: "Anda akan keluar",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Ya",
+                  cancelButtonText: "Tidak"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    Swal.fire({
+                      title: "Keluar",
+                      text: "Anda berhasil keluar",
+                      icon: "success"
+                    });
+                    return router.push("/");
+                  }
+                });
               }}
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
             >

@@ -9,7 +9,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <Sidebar open={open} />
-      <div className="flex-1 md:ml-64">
+      <div className="flex-1 md:ml-64 bg-gray-100">
         <Navbar onToggle={() => setOpen(!open)} />
         <main className="p-4">{children}</main>
       </div>
