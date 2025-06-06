@@ -4,6 +4,7 @@ import { Menu, User } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
+import { signOut } from 'next-auth/react';
 
 interface Props {
   onToggle: () => void
@@ -13,6 +14,37 @@ export default function Navbar({ onToggle }: Props) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const router = useRouter();
+
+  const handleLogout = async () => {
+  const result = await Swal.fire({
+    title: "Anda Yakin?",
+    text: "Anda akan keluar",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak"
+  });
+
+  if (result.isConfirmed) {
+    // Panggil API logout
+    // await fetch('/api/logout', {
+    //   method: 'POST',
+    // });
+
+    // Tampilkan notifikasi berhasil logout
+    await Swal.fire({
+      title: "Keluar",
+      text: "Anda berhasil keluar",
+      icon: "success"
+    });
+
+    // Redirect ke halaman login (atau halaman utama)
+     signOut({ callbackUrl: '/' }); 
+  }
+  }
+
 
   // Close dropdown when clicked outside
   useEffect(() => {
@@ -50,28 +82,7 @@ export default function Navbar({ onToggle }: Props) {
               Profile
             </a>
             <button
-              onClick={() => {
-                // logic logout
-                Swal.fire({
-                  title: "Anda Yakin?",
-                  text: "Anda akan keluar",
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Ya",
-                  cancelButtonText: "Tidak"
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    Swal.fire({
-                      title: "Keluar",
-                      text: "Anda berhasil keluar",
-                      icon: "success"
-                    });
-                    return router.push("/");
-                  }
-                });
-              }}
+              onClick={handleLogout}
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
             >
               Logout

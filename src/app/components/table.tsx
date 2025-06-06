@@ -44,10 +44,10 @@ export default function ProductTable() {
     const categories = [...new Set(products.map(product => product.category))];
 
     return (
-        <div className={`min-h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+        <div className={`shadow-md min-h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-white'}`}>
             <section className="p-3 sm:p-5">
-                <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
-                    <div className={`relative shadow-md sm:rounded-lg overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                {/* <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
+                    <div className={`relative shadow-md sm:rounded-lg overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}> */}
 
                         {/* Table Header with Controls */}
                         <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
@@ -232,8 +232,8 @@ export default function ProductTable() {
                                 </li>
                             </ul>
                         </nav>
-                    </div>
-                </div>
+                    {/* </div>
+                </div> */}
             </section>
 
             {/* Create Product Modal */}

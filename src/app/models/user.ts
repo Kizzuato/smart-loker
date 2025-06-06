@@ -1,4 +1,6 @@
-import  mongoose, { Schema, model } from  "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import { UserRole } from '../types/role.enum';
+
 
 export interface UserDocument {
   _id: string;
@@ -7,11 +9,17 @@ export interface UserDocument {
   name: string;
   phone: string;
   image: string;
+  phone_number: number;
+  fingerprint_id: number;
+  role: string;
+  is_active: boolean;
+  registered_at: Date;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const UserSchema = new Schema<UserDocument>({
+const UserSchema = new Schema<UserDocument>(
+  {
     email: {
       type: String,
       unique: true,
@@ -23,17 +31,31 @@ const UserSchema = new Schema<UserDocument>({
     },
     password: {
       type: String,
-      required: true
+      required: true,
     },
     name: {
       type: String,
-      required: [true, "Name is required"]
-    }
+      required: [true, "Name is required"],
+    },
+    phone_number: {
+      type: Number,
+    },
+    fingerprint_id: {
+      type: Number,
+      unique: true,
+    },
+    role: {
+      type: String,
+      enum: Object.values(UserRole),
+      default: UserRole.USER,
+    },
+    is_active: { type: Boolean, default: true },
+    registered_at: { type: Date, default: Date.now },
   },
   {
     timestamps: true,
   }
 );
 
-const  User  =  mongoose.models?.User  ||  model<UserDocument>('User', UserSchema);
-export  default  User;
+const User = mongoose.models?.User || model<UserDocument>("User", UserSchema);
+export default User;
