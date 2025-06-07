@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
-import { UserRole } from '../types/role.enum';
+import { UserRole } from '../types/role.enum.ts';
 
 
 export interface UserDocument {
@@ -57,5 +57,5 @@ const UserSchema = new Schema<UserDocument>(
   }
 );
 
-const User = mongoose.models?.User || model<UserDocument>("User", UserSchema);
-export default User;
+export const User = mongoose.models?.User || mongoose.model<UserDocument>("User", UserSchema);
+// export default User;

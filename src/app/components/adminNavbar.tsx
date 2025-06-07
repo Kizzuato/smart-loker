@@ -58,7 +58,7 @@ export default function Navbar({ onToggle }: Props) {
   }, [])
 
   return (
-    <nav className="w-full bg-blue-600 text-white px-4 py-3 flex items-center justify-between relative">
+    <nav className="w-full bg-blue-600 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-50">
       <button onClick={onToggle} className="md:hidden">
         <Menu size={24} />
       </button>

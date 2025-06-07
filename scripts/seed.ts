@@ -1,0 +1,201 @@
+import mongoose from "mongoose";
+import { User } from "../src/app/models/user.ts"; // sesuaikan path import
+import { NotificationModel } from "../src/app/models/Notification.ts";
+import { DeviceModel } from "../src/app/models/Device.ts";
+import { AccessLogModel } from "../src/app/models/AccessLog.ts";
+// import { UserRole } from "../src/app/types/role.enum.ts";
+import dbConnect from "../src/lib/mongodb.js";
+
+async function seed() {
+  try {
+    await dbConnect();
+    console.log("Connected to MongoDB");
+
+    // Clear collections
+    // await User.deleteMany({});
+    // await NotificationModel.deleteMany({});
+    // await DeviceModel.deleteMany({});
+    // await AccessLogModel.deleteMany({});
+
+    // Seed Users
+    const users = [
+      {
+        email: "alice@example.com",
+        password: "hashedpassword1",
+        name: "Alice",
+        phone_number: 1234567890,
+        fingerprint_id: 101,
+        role: "admin",
+        is_active: true,
+      },
+      {
+        email: "bob@example.com",
+        password: "hashedpassword2",
+        name: "Bob",
+        phone_number: 2345678901,
+        fingerprint_id: 102,
+        role: "user",
+        is_active: true,
+      },
+      {
+        email: "carol@example.com",
+        password: "hashedpassword3",
+        name: "Carol",
+        phone_number: 3456789012,
+        fingerprint_id: 103,
+        role: "user",
+        is_active: false,
+      },
+      {
+        email: "dave@example.com",
+        password: "hashedpassword4",
+        name: "Dave",
+        phone_number: 4567890123,
+        fingerprint_id: 104,
+        role: "user",
+        is_active: true,
+      },
+      {
+        email: "eve@example.com",
+        password: "hashedpassword5",
+        name: "Eve",
+        phone_number: 5678901234,
+        fingerprint_id: 105,
+        role: "user",
+        is_active: true,
+      },
+    ];
+
+    const createdUsers = await User.insertMany(users);
+
+    // Seed Notifications
+    const notifications = [
+      {
+        user_id: createdUsers[0]._id,
+        message: "Welcome Alice!",
+        type: "info",
+        read: false,
+      },
+      {
+        user_id: createdUsers[1]._id,
+        message: "Your account will expire soon.",
+        type: "warning",
+        read: false,
+      },
+      {
+        user_id: createdUsers[2]._id,
+        message: "Failed login attempt detected.",
+        type: "error",
+        read: true,
+      },
+      {
+        user_id: createdUsers[3]._id,
+        message: "Password changed successfully.",
+        type: "info",
+        read: false,
+      },
+      {
+        user_id: createdUsers[4]._id,
+        message: "New feature released!",
+        type: "info",
+        read: true,
+      },
+    ];
+
+    await NotificationModel.insertMany(notifications);
+
+    // Seed Devices
+    const devices = [
+      {
+        device_id: "device001",
+        location: "Main Gate",
+        status: "idle",
+        mode: "access",
+        last_seen: new Date(),
+      },
+      {
+        device_id: "device002",
+        location: "Back Door",
+        status: "registering",
+        mode: "register",
+        last_seen: new Date(),
+      },
+      {
+        device_id: "device003",
+        location: "Office",
+        status: "accessing",
+        mode: "access",
+        last_seen: new Date(),
+      },
+      {
+        device_id: "device004",
+        location: "Warehouse",
+        status: "idle",
+        mode: "access",
+        last_seen: new Date(),
+      },
+      {
+        device_id: "device005",
+        location: "Lobby",
+        status: "accessing",
+        mode: "register",
+        last_seen: new Date(),
+      },
+    ];
+
+    await DeviceModel.insertMany(devices);
+
+    // Seed AccessLogs
+    const accessLogs = [
+      {
+        user_id: createdUsers[0]._id,
+        fingerprint_id: 101,
+        device_id: "device001",
+        access_time: new Date(),
+        status: "success",
+        remarks: "Entry granted",
+      },
+      {
+        user_id: createdUsers[1]._id,
+        fingerprint_id: 102,
+        device_id: "device002",
+        access_time: new Date(),
+        status: "failed",
+        remarks: "Fingerprint not recognized",
+      },
+      {
+        user_id: createdUsers[2]._id,
+        fingerprint_id: 103,
+        device_id: "device003",
+        access_time: new Date(),
+        status: "success",
+      },
+      {
+        user_id: createdUsers[3]._id,
+        fingerprint_id: 104,
+        device_id: "device004",
+        access_time: new Date(),
+        status: "failed",
+        remarks: "Access denied",
+      },
+      {
+        user_id: createdUsers[4]._id,
+        fingerprint_id: 105,
+        device_id: "device005",
+        access_time: new Date(),
+        status: "success",
+        remarks: "Entry granted",
+      },
+    ];
+
+    await AccessLogModel.insertMany(accessLogs);
+
+    console.log("Seeding complete!");
+    process.exit(0);
+  } catch (err) {
+    console.error("Seeding error:", err);
+    process.exit(1);
+  }
+}
+
+seed();

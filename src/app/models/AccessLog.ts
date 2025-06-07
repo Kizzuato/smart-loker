@@ -1,4 +1,3 @@
-import { AccessLog } from './../../lib/data';
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IAccessLog extends Document {
