@@ -1,7 +1,7 @@
 export interface Locker {
   id: number
   label: string
-  status: 'kosong' | 'terisi' | 'nonaktif'
+  status: 'kosong' | 'terisi' | 'nonaktif' | 'aktif'
 }
 
 export const dummyLockers: Locker[] = [

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireRole } from '@/middleware/requireRole';
 import { logs } from '@/lib/data';
 
 export async function POST(req: NextRequest) {

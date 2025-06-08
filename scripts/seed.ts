@@ -12,10 +12,10 @@ async function seed() {
     console.log("Connected to MongoDB");
 
     // Clear collections
-    // await User.deleteMany({});
-    // await NotificationModel.deleteMany({});
-    // await DeviceModel.deleteMany({});
-    // await AccessLogModel.deleteMany({});
+    await User.deleteMany({});
+    await NotificationModel.deleteMany({});
+    await DeviceModel.deleteMany({});
+    await AccessLogModel.deleteMany({});
 
     // Seed Users
     const users = [
@@ -109,35 +109,56 @@ async function seed() {
       {
         device_id: "device001",
         location: "Main Gate",
-        status: "idle",
+        status: "kosong",
         mode: "access",
         last_seen: new Date(),
       },
       {
         device_id: "device002",
         location: "Back Door",
-        status: "registering",
+        status: "terisi",
         mode: "register",
         last_seen: new Date(),
       },
       {
         device_id: "device003",
         location: "Office",
-        status: "accessing",
+        status: "nonaktif",
         mode: "access",
         last_seen: new Date(),
       },
       {
         device_id: "device004",
         location: "Warehouse",
-        status: "idle",
+        status: "kosong",
         mode: "access",
         last_seen: new Date(),
       },
       {
         device_id: "device005",
         location: "Lobby",
-        status: "accessing",
+        status: "terisi",
+        mode: "register",
+        last_seen: new Date(),
+      },
+      {
+        device_id: "device006",
+        location: "Lobby",
+        status: "kosong",
+        mode: "register",
+        last_seen: new Date(),
+      },
+      {
+        device_id: "device007",
+        location: "Office",
+        status: "terisi",
+        mode: "register",
+        last_seen: new Date(),
+      },
+      {
+        device_id: "device008",
+        location: "Office",
+        status: "nonaktif",
         mode: "register",
         last_seen: new Date(),
       },

@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface IDevice extends Document {
   device_id: string;
   location?: string;
-  status: 'idle' | 'registering' | 'accessing';
+  status: 'kosong' | 'terisi' | 'nonaktif' | 'aktif';
   mode: 'access' | 'register';
   last_seen?: Date;
 }
@@ -11,7 +11,7 @@ export interface IDevice extends Document {
 const deviceSchema = new Schema<IDevice>({
   device_id: { type: String, required: true, unique: true },
   location: { type: String },
-  status: { type: String, enum: ['idle', 'registering', 'accessing'], default: 'idle' },
+  status: { type: String, enum: ['kosong', 'terisi', 'nonaktif', 'aktif'], default: 'nonaktif' },
   mode: { type: String, enum: ['access', 'register'], default: 'access' },
   last_seen: { type: Date }
 });
