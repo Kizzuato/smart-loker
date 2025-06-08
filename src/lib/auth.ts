@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb";
-import User from "@/app/models/user";
+import { User } from "@/app/models/user";
 import type { NextAuthOptions } from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";

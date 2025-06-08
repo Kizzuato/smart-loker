@@ -2,47 +2,47 @@
 import { useState } from 'react';
 import { FiSun, FiMoon, FiGrid, FiList, FiSearch, FiX, FiChevronLeft, FiChevronRight, FiCheck, FiEdit2, FiEye, FiTrash2, FiPlus } from 'react-icons/fi';
 
-interface Product {
-    id: number;
+interface User {
+    _id: string;
     name: string;
-    category: string;
-    brand: string;
-    description: string;
-    price: number;
+    email: string;
+}
+interface AccessLog {
+    _id: string;
+    user_id?: User;
+    fingerprint_id: number;
+    device_id: string;
+    access_time: Date;
+    status: 'success' | 'failed';
+    remarks?: string;
 }
 
+interface Props {
+    items: AccessLog[]
+}
 
-export default function ProductTable() {
+export default function ProductTable({ items }: Props) {
     const [darkMode, setDarkMode] = useState(false);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<AccessLog | null>(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    // Sample product data
-    const products: Product[] = [
-        { id: 1, name: 'Apple iMac 27"', category: 'PC', brand: 'Apple', description: 'What is a product description? A product description describes a product.', price: 2999 },
-        { id: 2, name: 'Apple iMac 20"', category: 'PC', brand: 'Apple', description: 'What is a product description? A product description describes a product.', price: 1499 },
-        { id: 3, name: 'Apple iPhone 14', category: 'Phone', brand: 'Apple', description: 'What is a product description? A product description describes a product.', price: 999 },
-        { id: 4, name: 'Apple iPad Air', category: 'Tablet', brand: 'Apple', description: 'What is a product description? A product description describes a product.', price: 1199 },
-        { id: 5, name: 'Xbox Series S', category: 'Gaming/Console', brand: 'Microsoft', description: 'What is a product description? A product description describes a product.', price: 299 },
-        { id: 6, name: 'PlayStation 5', category: 'Gaming/Console', brand: 'Sony', description: 'What is a product description? A product description describes a product.', price: 799 },
-    ];
+    // Sample item data
 
-    // Filter products based on search and category
-    const filteredProducts = products.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.description.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = !selectedCategory || product.category === selectedCategory;
-        return matchesSearch && matchesCategory;
+    // Filter items based on search and category
+    const filteredProducts = items.filter(item => {
+        const matchesSearch = item.user_id?.name.toLowerCase().includes(searchQuery.toLowerCase());
+        // const matchesCategory = !selectedCategory || item.category === selectedCategory;
+        return matchesSearch;
     });
 
     // Get unique categories
-    const categories = [...new Set(products.map(product => product.category))];
+    const categories = [...new Set(items.map(item => item.status))];
 
     return (
         <div className="grid grid-cols-1 gap-6 mb-6">
@@ -117,42 +117,44 @@ export default function ProductTable() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className="py-2 px-2 border-b border-b-gray-50">
-                                    <div className="flex items-center">
-                                        <a
-                                            href="#"
-                                            className="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate"
-                                        >Trash Pickup</a
+                            {items.map((items) => (
+                                <tr key={items._id}>
+                                    <td className="py-2 px-2 border-b border-b-gray-50">
+                                        <div className="flex items-center">
+                                            <a
+                                                href="#"
+                                                className="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate"
+                                            >{items.device_id}</a
+                                            >
+                                        </div>
+                                    </td>
+                                    <td className="py-2 px-2 border-b border-b-gray-50">
+                                        <span className="text-[13px] font-medium text-emerald-500"
+                                        >3 Kg</span
                                         >
-                                    </div>
-                                </td>
-                                <td className="py-2 px-2 border-b border-b-gray-50">
-                                    <span className="text-[13px] font-medium text-emerald-500"
-                                    >3 Kg</span
-                                    >
-                                </td>
-                                <td className="py-2 px-2 border-b border-b-gray-50">
-                                    <span
-                                        className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"
-                                    >Done</span
-                                    >
-                                </td>
-                                <td className="py-2 px-2 border-b border-b-gray-50">
-                                    <span
-                                        className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"
-                                    >Done</span
-                                    >
-                                </td>
-                                <td className="py-2 px-4 border-b border-b-gray-50">
-                                    <button
-                                        type="button"
-                                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-2 focus:ring-green-300 font-small rounded-md text-xs px-3 py-1.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                                    >
-                                        Details
-                                    </button>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td className="py-2 px-2 border-b border-b-gray-50">
+                                        <span
+                                            className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"
+                                        >Done</span
+                                        >
+                                    </td>
+                                    <td className="py-2 px-2 border-b border-b-gray-50">
+                                        <span
+                                            className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"
+                                        >Done</span
+                                        >
+                                    </td>
+                                    <td className="py-2 px-4 border-b border-b-gray-50">
+                                        <button
+                                            type="button"
+                                            className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-2 focus:ring-green-300 font-small rounded-md text-xs px-3 py-1.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                                        >
+                                            Details
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

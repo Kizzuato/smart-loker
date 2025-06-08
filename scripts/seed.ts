@@ -164,14 +164,14 @@ async function seed() {
       },
     ];
 
-    await DeviceModel.insertMany(devices);
+    const createdDevices = await DeviceModel.insertMany(devices);
 
     // Seed AccessLogs
     const accessLogs = [
       {
         user_id: createdUsers[0]._id,
         fingerprint_id: 101,
-        device_id: "device001",
+        device_id: createdDevices[0]._id,
         access_time: new Date(),
         status: "success",
         remarks: "Entry granted",
@@ -179,7 +179,7 @@ async function seed() {
       {
         user_id: createdUsers[1]._id,
         fingerprint_id: 102,
-        device_id: "device002",
+        device_id: createdDevices[1]._id,
         access_time: new Date(),
         status: "failed",
         remarks: "Fingerprint not recognized",
@@ -187,14 +187,14 @@ async function seed() {
       {
         user_id: createdUsers[2]._id,
         fingerprint_id: 103,
-        device_id: "device003",
+        device_id: createdDevices[2]._id,
         access_time: new Date(),
         status: "success",
       },
       {
         user_id: createdUsers[3]._id,
         fingerprint_id: 104,
-        device_id: "device004",
+        device_id: createdDevices[3]._id,
         access_time: new Date(),
         status: "failed",
         remarks: "Access denied",
@@ -202,7 +202,7 @@ async function seed() {
       {
         user_id: createdUsers[4]._id,
         fingerprint_id: 105,
-        device_id: "device005",
+        device_id: createdDevices[4]._id,
         access_time: new Date(),
         status: "success",
         remarks: "Entry granted",
@@ -212,11 +212,18 @@ async function seed() {
     await AccessLogModel.insertMany(accessLogs);
 
     console.log("Seeding complete!");
+    User.find({})
+    NotificationModel.find({})
+    DeviceModel.find({})
+    AccessLogModel.find({})
+    
+    console.log("Registered Mongoose models:", mongoose.modelNames());
     process.exit(0);
   } catch (err) {
     console.error("Seeding error:", err);
     process.exit(1);
   }
 }
+
 
 seed();

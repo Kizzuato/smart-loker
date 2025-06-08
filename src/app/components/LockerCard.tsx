@@ -77,7 +77,7 @@ export default function LockerCard({ device }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute end-0 top-20 bg-white rounded shadow-md p-2 z-10"
+            className="absolute end-0 top-25 bg-white rounded shadow-md p-2 z-10"
           >
             <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-gray-100">Aktivitas</button>
             <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-gray-100">Pengguna</button>

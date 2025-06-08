@@ -3,9 +3,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import { DeviceModel } from '@/app/models/Device';
+import mongoose from 'mongoose';
 
 export async function GET() {
   await dbConnect();
+  // console.log("Registered Mongoose models:", mongoose.modelNames());
+
   try {
     const items = await DeviceModel.find({});
     return NextResponse.json({ success: true, data: items });
