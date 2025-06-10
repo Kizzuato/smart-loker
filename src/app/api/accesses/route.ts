@@ -11,7 +11,7 @@ export async function GET() {
     const accesses = await AccessLogModel.find({}).populate(
       "user_id",
       "name email"
-    ).populate("device_id", "location status");
+    ).populate("device_id", "location status device_id");
     return NextResponse.json({ success: true, data: accesses });
   } catch (error: any) {
     console.error(error);
@@ -21,3 +21,5 @@ export async function GET() {
     );
   }
 }
+
+export async function 

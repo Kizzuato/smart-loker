@@ -1,7 +1,7 @@
 "use server"
 
 import dbConnect from "@/lib/mongodb";
-import User from "../models/user";
+import { User } from "../models/user";
 import bcrypt from "bcryptjs";export const register = async (values: any) => {
     const { email, password, name } = values;
 

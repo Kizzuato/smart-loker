@@ -2,6 +2,15 @@
 import { useState } from 'react';
 import { FiSun, FiMoon, FiGrid, FiList, FiSearch, FiX, FiChevronLeft, FiChevronRight, FiCheck, FiEdit2, FiEye, FiTrash2, FiPlus } from 'react-icons/fi';
 
+interface Device {
+    _id: string;
+    device_id: string;
+    location?: string;
+    status: 'kosong' | 'terisi' | 'nonaktif';
+    mode: 'access' | 'register';
+    last_seen?: Date;
+}
+
 interface User {
     _id: string;
     name: string;
@@ -11,7 +20,7 @@ interface AccessLog {
     _id: string;
     user_id?: User;
     fingerprint_id: number;
-    device_id: string;
+    device_id: Device;
     access_time: Date;
     status: 'success' | 'failed';
     remarks?: string;
@@ -117,33 +126,44 @@ export default function ProductTable({ items }: Props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {items.map((items) => (
-                                <tr key={items._id}>
+                            {items.map((item) => (
+                                <tr key={item._id}>
                                     <td className="py-2 px-2 border-b border-b-gray-50">
                                         <div className="flex items-center">
-                                            <a
-                                                href="#"
-                                                className="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate"
-                                            >{items.device_id}</a
+                                            <span
+                                                className="text-gray-600 text-sm font-medium ml-2 truncate"
+                                            >{item.device_id?.device_id}</span
                                             >
                                         </div>
                                     </td>
                                     <td className="py-2 px-2 border-b border-b-gray-50">
-                                        <span className="text-[13px] font-medium text-emerald-500"
-                                        >3 Kg</span
-                                        >
+                                        <div className="flex items-center">
+                                            <span className="text-[13px] font-medium text-emerald-500"
+                                            >{item.user_id?.name || 'Tidak Diketahui'}</span
+                                            >
+                                        </div>
                                     </td>
                                     <td className="py-2 px-2 border-b border-b-gray-50">
-                                        <span
-                                            className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"
-                                        >Done</span
-                                        >
+                                        <div className="flex items-center">
+                                            <span
+                                                className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"
+                                            >{item.access_time ? new Date(item.access_time).toLocaleString('id-ID', {
+                                                dateStyle: 'short',
+                                                timeStyle: 'short'
+                                            }) : 'Waktu tidak diketahui'}
+
+                                            </span>
+                                        </div>
                                     </td>
                                     <td className="py-2 px-2 border-b border-b-gray-50">
-                                        <span
-                                            className="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none"
-                                        >Done</span
-                                        >
+                                        <div className="flex items-center">
+                                            <span className={`inline-block p-1 rounded text-[12px] font-medium leading-none ${item.status === 'success'
+                                                ? 'bg-emerald-500/10 text-emerald-500'
+                                                : 'bg-red-500/10 text-red-500'
+                                                }`}>
+                                                {item.status}
+                                            </span>
+                                        </div>
                                     </td>
                                     <td className="py-2 px-4 border-b border-b-gray-50">
                                         <button

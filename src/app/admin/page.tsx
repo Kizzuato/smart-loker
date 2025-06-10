@@ -14,11 +14,16 @@ interface Device {
   last_seen?: Date;
 }
 
-interface AccessLog{
+interface User {
   _id: string;
-  user_id?: string;
+  name: string;
+  email: string;
+}
+interface AccessLog {
+  _id: string;
+  user_id?: User;
   fingerprint_id: number;
-  device_id: string;
+  device_id: Device;
   access_time: Date;
   status: 'success' | 'failed';
   remarks?: string;
@@ -44,14 +49,19 @@ export default function AdminDashboard() {
     const fetchAccesses = async () => {
       try {
         const res = await fetch('/api/accesses')
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+
         const data = await res.json()
         if (data.success) {
           setAccesses(data.data)
+        } else {
+          console.error('API response was not successful:', data)
         }
       } catch (err) {
         console.error('Failed to fetch Accesses:', err)
       }
     }
+
 
     fetchDevices()
     fetchAccesses()
@@ -69,8 +79,8 @@ export default function AdminDashboard() {
         <div className="text-2xl font-semibold mb-2 mt-2">Tabel Aktifitas Loker 1</div>
       </div>
       <div>
-        <ProductTable items={accesses}/>
+        <ProductTable items={accesses} />
       </div>
-    </div>setAccesses
+    </div>
   )
 }
