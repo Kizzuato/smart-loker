@@ -1,5 +1,5 @@
 // models/index.ts
-import "./user";
-import "./Notification";
-import "./AccessLog";
-import "./Device";
+import "./user.ts";
+import "./Notification.ts";
+import "./AccessLog.ts";
+import "./Device.ts";

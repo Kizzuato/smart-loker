@@ -179,7 +179,7 @@ async function seed() {
       {
         user_id: createdUsers[1]._id,
         fingerprint_id: 102,
-        device_id: createdDevices[1]._id,
+        device_id: createdDevices[0]._id,
         access_time: new Date(),
         status: "failed",
         remarks: "Fingerprint not recognized",
@@ -194,7 +194,7 @@ async function seed() {
       {
         user_id: createdUsers[3]._id,
         fingerprint_id: 104,
-        device_id: createdDevices[3]._id,
+        device_id: createdDevices[0]._id,
         access_time: new Date(),
         status: "failed",
         remarks: "Access denied",
@@ -202,7 +202,7 @@ async function seed() {
       {
         user_id: createdUsers[4]._id,
         fingerprint_id: 105,
-        device_id: createdDevices[4]._id,
+        device_id: createdDevices[2]._id,
         access_time: new Date(),
         status: "success",
         remarks: "Entry granted",

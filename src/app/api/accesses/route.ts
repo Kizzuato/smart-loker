@@ -1,12 +1,10 @@
 import dbConnect from "@/lib/mongodb";
-import { User } from "@/app/models/user"; 
 import { AccessLogModel } from "@/app/models/AccessLog";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 
 export async function GET() {
   await dbConnect();
-      console.log("Registered Mongoose models:", mongoose.modelNames());
   try {
     const accesses = await AccessLogModel.find({}).populate(
       "user_id",
@@ -22,4 +20,4 @@ export async function GET() {
   }
 }
 
-export async function 
+// export async function 

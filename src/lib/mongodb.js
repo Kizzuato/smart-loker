@@ -1,6 +1,6 @@
 // lib/mongodb.js
 import mongoose from 'mongoose';
-import "@/app/models";
+import "../app/models/index.ts";
 
 const MONGODB_URI = "mongodb+srv://Kizzuato:Azazel03@kizzuato.7ptmhd7.mongodb.net/?retryWrites=true&w=majority&appName=Kizzuato";
 

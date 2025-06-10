@@ -33,6 +33,8 @@ export default function AdminDashboard() {
   const [devices, setDevices] = useState<Device[]>([])
   const [accesses, setAccesses] = useState<AccessLog[]>([])
 
+
+  
   useEffect(() => {
     const fetchDevices = async () => {
       try {
@@ -45,40 +47,39 @@ export default function AdminDashboard() {
         console.error('Failed to fetch devices:', err)
       }
     }
-
-    const fetchAccesses = async () => {
-      try {
-        const res = await fetch('/api/accesses')
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
-
-        const data = await res.json()
-        if (data.success) {
-          setAccesses(data.data)
-        } else {
-          console.error('API response was not successful:', data)
-        }
-      } catch (err) {
-        console.error('Failed to fetch Accesses:', err)
-      }
-    }
-
-
     fetchDevices()
-    fetchAccesses()
+    // fetchAccesses()
   }, [])
+  
+  useEffect(() => {
+    if (devices.length > 0) {
+      const firstDeviceId = devices[0]._id;
+      fetchAccesses(firstDeviceId);
+    }
+  }, [devices]);
 
+  const fetchAccesses = async (id: string) => {
+    try {
+      const res = await fetch(`/api/accesses/${id}`);
+      const data = await res.json()
+      if (data.success) {
+        setAccesses(data.data)
+      }
+    } catch (err) {
+      console.error('Failed to fetch Accesses:', err)
+    }
+  }
+  
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">List Loker</h1>
+      <h1 className="text-2xl font-bold mb-2">List Loker</h1>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {devices.map(device => (
           <LockerCard key={device.device_id} device={device} />
         ))}
       </div>
-      <div className="flex justify-between">
-        <div className="text-2xl font-semibold mb-2 mt-2">Tabel Aktifitas Loker 1</div>
-      </div>
       <div>
+        <div className="text-2xl font-semibold mb-2 mt-4">Tabel Aktifitas Loker 1</div>
         <ProductTable items={accesses} />
       </div>
     </div>
