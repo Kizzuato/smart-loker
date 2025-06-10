@@ -16,33 +16,28 @@ export default function Navbar({ onToggle }: Props) {
   const router = useRouter();
 
   const handleLogout = async () => {
-  const result = await Swal.fire({
-    title: "Anda Yakin?",
-    text: "Anda akan keluar",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Ya",
-    cancelButtonText: "Tidak"
-  });
-
-  if (result.isConfirmed) {
-    // Panggil API logout
-    // await fetch('/api/logout', {
-    //   method: 'POST',
-    // });
-
-    // Tampilkan notifikasi berhasil logout
-    await Swal.fire({
-      title: "Keluar",
-      text: "Anda berhasil keluar",
-      icon: "success"
+    const result = await Swal.fire({
+      title: "Anda Yakin?",
+      text: "Anda akan keluar",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya",
+      cancelButtonText: "Tidak"
     });
 
-    // Redirect ke halaman login (atau halaman utama)
-     signOut({ callbackUrl: '/' }); 
-  }
+    if (result.isConfirmed) {
+      signOut({ callbackUrl: '/' });
+      
+      await Swal.fire({
+        title: "Keluar",
+        text: "Anda berhasil keluar",
+        icon: "success"
+      });
+
+      // Redirect ke halaman login (atau halaman utama)
+    }
   }
 
 

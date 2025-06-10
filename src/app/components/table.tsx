@@ -69,11 +69,11 @@ export default function ProductTable({ items }: Props) {
                                 >
                                     Status
                                 </th>
-                                <th
+                                {/* <th
                                     className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md"
                                 >
                                     Aksi
-                                </th>
+                                </th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -116,14 +116,14 @@ export default function ProductTable({ items }: Props) {
                                             </span>
                                         </div>
                                     </td>
-                                    <td className="py-2 px-4 border-b border-b-gray-50">
+                                    {/* <td className="py-2 px-4 border-b border-b-gray-50">
                                         <button
                                             type="button"
                                             className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-2 focus:ring-green-300 font-small rounded-md text-xs px-3 py-1.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
                                         >
                                             Details
                                         </button>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             ))}
                         </tbody>

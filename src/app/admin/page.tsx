@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         ))}
       </div>
       <div>
-        <div className="text-2xl font-semibold mb-2 mt-4">Tabel Aktifitas Loker 1</div>
+        <div className="text-2xl font-semibold mb-2 mt-4">Tabel Aktifitas {devices[0]?.device_id}</div>
         <ProductTable items={accesses} />
       </div>
     </div>
