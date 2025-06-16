@@ -20,4 +20,28 @@ export async function GET() {
   }
 }
 
+export async function POST(request: Request) {
+  await dbConnect();
+
+  try {
+    const body = await request.json();
+
+    const newLog = await AccessLogModel.create({
+      device_id: body.device_id,
+      user_id: body.user_id,
+      status: body.status,
+      timestamp: new Date(), // atau body.timestamp jika dikirim dari ESP
+    });
+
+    console.log("aman?");
+    return NextResponse.json({ success: true, data: newLog });
+  } catch (error: any) {
+    console.error(error);
+    return NextResponse.json(
+      { success: false, error: error.message || "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
 // export async function 

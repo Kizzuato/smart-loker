@@ -79,8 +79,8 @@ export default function LockerCard({ device }: Props) {
             transition={{ duration: 0.2 }}
             className="absolute end-0 top-25 bg-white rounded shadow-md p-2 z-10"
           >
-            <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-gray-100">Aktivitas</button>
-            <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-gray-100">Pengguna</button>
+            <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-blue-100 hover:text-blue-500">Aktivitas</button>
+            <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-blue-100 hover:text-blue-500">Pengguna</button>
           </motion.div>
         )}
       </AnimatePresence>

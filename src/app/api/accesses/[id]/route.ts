@@ -21,7 +21,7 @@ export async function GET(
   }
 
   try {
-    const access = await AccessLogModel.find({device_id: _id})
+    const access = await AccessLogModel.find({device_id: _id}).sort({access_time: -1})
       .populate("user_id", "name email")
       .populate("device_id", "location status device_id");
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import LockerCard from '../components/LockerCard'
 import { dummyLockers } from '@/lib/dummyLockers'
-import ProductTable from '../components/table'
+import ProductTable from '../components/tableAktifitas'
 
 interface Device {
   _id: string;
@@ -32,6 +32,7 @@ interface AccessLog {
 export default function AdminDashboard() {
   const [devices, setDevices] = useState<Device[]>([])
   const [accesses, setAccesses] = useState<AccessLog[]>([])
+  const [aksi, setAksi] = useState([])
 
 
   

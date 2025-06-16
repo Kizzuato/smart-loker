@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 import dbConnect from '@/lib/mongodb'
-import { User } from '@/app/models'
+import { User } from '@/app/models/user'
 
 const dataPath = path.join(process.cwd(), 'user-data.json')
 const enrollPath = path.join(process.cwd(), 'enroll-mode.json')
@@ -28,11 +28,10 @@ export async function POST(req: Request) {
 
 export async function GET() {
   await dbConnect();
-  // console.log("Registered Mongoose models:", mongoose.modelNames());
 
   try {
-    const items = await User.find({});
-    return NextResponse.json({ success: true, data: items });
+    const users = await User.find({});
+    return NextResponse.json({ success: true, data: users });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch items' }, { status: 400 });
   }
