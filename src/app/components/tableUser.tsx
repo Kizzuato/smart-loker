@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import 'animate.css';
 
 interface User {
   _id: string;
@@ -36,7 +37,7 @@ export default function UserTable({
   device,
 }: {
   usersById: User[];
-  device: String;
+  device?: String;
 }) {
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,19 +48,20 @@ export default function UserTable({
   const [selectedUser, setSelectedUser] = useState<string>("");
   const [users, setUsers] = useState<User[]>([])
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch('/api/users');
-        const data = await res.json();
-        if (data.success) {
-          setUsers(data.data);
-          console.log(data.data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch users:', err);
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch('/api/users');
+      const data = await res.json();
+      if (data.success) {
+        setUsers(data.data);
+        console.log(data.data);
       }
-    };
+    } catch (err) {
+      console.error('Failed to fetch users:', err);
+    }
+  };
+
+  useEffect(() => {
 
     fetchUsers();
   }, []);
@@ -80,13 +82,53 @@ export default function UserTable({
 
   const addUser = async () => {
     try {
-      await fetch(`/api/users/${selectedUser}`, {
+      const res = await fetch(`/api/users/${selectedUser}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ device_id: device, fingerprint_id: selectedSlot })
       });
+
+      if (res.ok) {
+        const result = await res.json();
+        await fetchUsers(); // ambil data terbaru
+        setIsModalOpen(false); // tutup modal
+        setSelectedSlot(null);
+        setSelectedUser("");
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'User berhasil ditambahkan ke fingerprint',
+          showConfirmButton: false,
+          timer: 2000,
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        }).then(() => {
+        window.location.reload();
+      });;
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Terjadi kesalahan saat menambahkan user',
+          showClass: {
+            popup: 'animate__animated animate__shakeX'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOut'
+          }
+        });
+      }
     } catch (err) {
       console.error("Enrollment failed:", err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Terjadi kesalahan saat menghubungi server',
+      });
     }
   };
 

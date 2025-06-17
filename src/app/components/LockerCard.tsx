@@ -83,7 +83,7 @@ export default function LockerCard({ device }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute end-0 top-25 bg-white  shadow-md m-2 z-10"
+            className="absolute end-0 top-25 bg-white shadow-md z-10"
           >
             <button 
               onClick={() => handleSelect('access')} 

@@ -52,18 +52,7 @@ export default function AdminDashboard() {
         console.error('Failed to fetch devices:', err)
       }
     }
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch('/api/users')
-        const data = await res.json()
-        if (data.success) {
-          setUsers(data.data)
-        }
-      } catch (err) {
-        console.error('Failed to fetch devices:', err)
-      }
-    }
-    fetchUsers()    
+
     fetchDevices()
   }, [])
 
