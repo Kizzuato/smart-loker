@@ -97,7 +97,7 @@ export default function UserTable({
         Swal.fire({
           icon: 'success',
           title: 'Berhasil',
-          text: 'User berhasil ditambahkan ke fingerprint',
+          text: 'User berhasil didaftarkan',
           showConfirmButton: false,
           timer: 2000,
           showClass: {
@@ -107,13 +107,13 @@ export default function UserTable({
             popup: 'animate__animated animate__fadeOutUp'
           }
         }).then(() => {
-        window.location.reload();
-      });;
+          window.location.reload();
+        });;
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Gagal',
-          text: 'Terjadi kesalahan saat menambahkan user',
+          text: 'Terjadi kesalahan saat mendaftarkan user',
           showClass: {
             popup: 'animate__animated animate__shakeX'
           },
@@ -131,6 +131,70 @@ export default function UserTable({
       });
     }
   };
+
+  const delUser = async (id_user: string) => {
+    const confirm = await Swal.fire({
+      title: 'Yakin ingin menghapus user ini?',
+      text: "Tindakan ini tidak dapat dibatalkan.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      const res = await fetch(`/api/users/${id_user}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ device_id: null, fingerprint_id: null })
+      });
+
+      console.log("TES: ", id_user);
+      if (res.ok) {
+        const result = await res.json();
+        setIsModalOpen(false);
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'User berhasil dihapus',
+          showConfirmButton: false,
+          timer: 2000,
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Terjadi kesalahan saat menghapus user',
+          showClass: {
+            popup: 'animate__animated animate__shakeX'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOut'
+          }
+        });
+      }
+    } catch (err) {
+      console.error("Enrollment failed:", err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Terjadi kesalahan saat menghubungi server',
+      });
+    }
+  };
+
 
   const handleEnroll = async () => {
     try {
@@ -177,7 +241,7 @@ export default function UserTable({
                 <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Fingerprint ID</th>
                 <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Role</th>
                 <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Aktif</th>
-                <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Aksi</th>
+                <th className="text-[12px] uppeonClick={delUser}rcase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -207,9 +271,9 @@ export default function UserTable({
                       <span className={`inline-block p-1 rounded text-[12px] font-medium leading-none ${user.is_active ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500'}`}>{user.is_active ? 'Aktif' : 'Nonaktif'}</span>
                     </td>
                     <td className="flex gap-2 text-center py-2">
-                      <button className="bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white text-sm py-1 px-2 border border-blue-500 hover:border-transparent rounded">Detail</button>
+                      {/* <button className="bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white text-sm py-1 px-2 border border-blue-500 hover:border-transparent rounded">Detail</button> */}
                       <button className="bg-transparent hover:bg-red-500 text-red-700 hover:text-white text-sm py-1 px-2 border border-red-500 hover:border-transparent rounded"
-                      // onClick={}
+                        onClick={() => delUser(user._id)}
                       >Hapus</button>
                     </td>
                   </tr>

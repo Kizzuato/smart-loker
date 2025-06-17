@@ -1,6 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
-import { UserRole } from '../types/role.enum.ts';
-
+import { UserRole } from "../types/role.enum.ts";
 
 export interface UserDocument {
   _id: string;
@@ -43,14 +42,14 @@ const UserSchema = new Schema<UserDocument>(
     },
     fingerprint_id: {
       type: Number,
-      unique: true,
+      default: null, // opsional, agar kosong secara default
     },
     role: {
       type: String,
       enum: Object.values(UserRole),
       default: UserRole.USER,
     },
-    device_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Device' },
+    device_id: { type: mongoose.Schema.Types.ObjectId, ref: "Device" },
     is_active: { type: Boolean, default: true },
     registered_at: { type: Date, default: Date.now },
   },
@@ -59,5 +58,6 @@ const UserSchema = new Schema<UserDocument>(
   }
 );
 
-export const User = mongoose.models?.User || mongoose.model<UserDocument>('User', UserSchema);
+export const User =
+  mongoose.models?.User || mongoose.model<UserDocument>("User", UserSchema);
 // export default User;
