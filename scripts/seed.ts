@@ -10,99 +10,12 @@ async function seed() {
   try {
     await dbConnect();
     console.log("Connected to MongoDB");
-
+    
     // Clear collections
     await User.deleteMany({});
     await NotificationModel.deleteMany({});
     await DeviceModel.deleteMany({});
     await AccessLogModel.deleteMany({});
-
-    // Seed Users
-    const users = [
-      {
-        email: "alice@example.com",
-        password: "hashedpassword1",
-        name: "Alice",
-        phone_number: 1234567890,
-        fingerprint_id: 101,
-        role: "admin",
-        is_active: true,
-      },
-      {
-        email: "bob@example.com",
-        password: "hashedpassword2",
-        name: "Bob",
-        phone_number: 2345678901,
-        fingerprint_id: 102,
-        role: "user",
-        is_active: true,
-      },
-      {
-        email: "carol@example.com",
-        password: "hashedpassword3",
-        name: "Carol",
-        phone_number: 3456789012,
-        fingerprint_id: 103,
-        role: "user",
-        is_active: false,
-      },
-      {
-        email: "dave@example.com",
-        password: "hashedpassword4",
-        name: "Dave",
-        phone_number: 4567890123,
-        fingerprint_id: 104,
-        role: "user",
-        is_active: true,
-      },
-      {
-        email: "eve@example.com",
-        password: "hashedpassword5",
-        name: "Eve",
-        phone_number: 5678901234,
-        fingerprint_id: 105,
-        role: "user",
-        is_active: true,
-      },
-    ];
-
-    const createdUsers = await User.insertMany(users);
-
-    // Seed Notifications
-    const notifications = [
-      {
-        user_id: createdUsers[0]._id,
-        message: "Welcome Alice!",
-        type: "info",
-        read: false,
-      },
-      {
-        user_id: createdUsers[1]._id,
-        message: "Your account will expire soon.",
-        type: "warning",
-        read: false,
-      },
-      {
-        user_id: createdUsers[2]._id,
-        message: "Failed login attempt detected.",
-        type: "error",
-        read: true,
-      },
-      {
-        user_id: createdUsers[3]._id,
-        message: "Password changed successfully.",
-        type: "info",
-        read: false,
-      },
-      {
-        user_id: createdUsers[4]._id,
-        message: "New feature released!",
-        type: "info",
-        read: true,
-      },
-    ];
-
-    await NotificationModel.insertMany(notifications);
 
     // Seed Devices
     const devices = [
@@ -163,8 +76,101 @@ async function seed() {
         last_seen: new Date(),
       },
     ];
-
+    
     const createdDevices = await DeviceModel.insertMany(devices);
+
+    // Seed Users
+    const users = [
+      {
+        email: "alice@example.com",
+        password: "hashedpassword1",
+        name: "Alice",
+        phone_number: 1234567890,
+        fingerprint_id: 101,
+        role: "admin",
+        device_id: createdDevices[0].id,
+        is_active: true,
+      },
+      {
+        email: "bob@example.com",
+        password: "hashedpassword2",
+        name: "Bob",
+        phone_number: 2345678901,
+        fingerprint_id: 102,
+        role: "user",
+        device_id: createdDevices[0].id,
+        is_active: true,
+      },
+      {
+        email: "carol@example.com",
+        password: "hashedpassword3",
+        name: "Carol",
+        phone_number: 3456789012,
+        fingerprint_id: 103,
+        role: "user",
+        device_id: createdDevices[1].id,
+        is_active: false,
+      },
+      {
+        email: "dave@example.com",
+        password: "hashedpassword4",
+        name: "Dave",
+        phone_number: 4567890123,
+        fingerprint_id: 104,
+        role: "user",
+        device_id: createdDevices[1].id,
+        is_active: true,
+      },
+      {
+        email: "eve@example.com",
+        password: "hashedpassword5",
+        name: "Eve",
+        phone_number: 5678901234,
+        fingerprint_id: 105,
+        role: "user",
+        device_id: createdDevices[1].id,
+        is_active: true,
+      },
+    ];
+
+    const createdUsers = await User.insertMany(users);
+
+    // Seed Notifications
+    const notifications = [
+      {
+        user_id: createdUsers[0]._id,
+        message: "Welcome Alice!",
+        type: "info",
+        read: false,
+      },
+      {
+        user_id: createdUsers[1]._id,
+        message: "Your account will expire soon.",
+        type: "warning",
+        read: false,
+      },
+      {
+        user_id: createdUsers[2]._id,
+        message: "Failed login attempt detected.",
+        type: "error",
+        read: true,
+      },
+      {
+        user_id: createdUsers[3]._id,
+        message: "Password changed successfully.",
+        type: "info",
+        read: false,
+      },
+      {
+        user_id: createdUsers[4]._id,
+        message: "New feature released!",
+        type: "info",
+        read: true,
+      },
+    ];
+
+    await NotificationModel.insertMany(notifications);
+
 
     // Seed AccessLogs
     const accessLogs = [

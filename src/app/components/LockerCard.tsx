@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from 'react'
 import { IoMdSettings } from 'react-icons/io'
 
 interface Device {
+  _id: string; // <--- tambahkan _id (biar bisa passing id ke parent)
   device_id: string;
   location?: string;
   status: 'kosong' | 'terisi' | 'nonaktif';
@@ -19,7 +20,8 @@ const statusColor = {
 }
 
 interface Props {
-  device: Device
+  device: Device;
+  // onSelect: (deviceId: string, mode: 'access' | 'user') => void;
 }
 
 export default function LockerCard({ device }: Props) {
@@ -51,6 +53,10 @@ export default function LockerCard({ device }: Props) {
     }
   }, [showOptions])
 
+  const handleSelect = (mode: 'access' | 'user') => {
+    setShowOptions(false);
+  }
+
   return (
     <div className="relative">
       <div className="flex justify-between mb-2 bg-white shadow-sm p-5 rounded-sm">
@@ -77,10 +83,20 @@ export default function LockerCard({ device }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute end-0 top-25 bg-white rounded shadow-md p-2 z-10"
+            className="absolute end-0 top-25 bg-white  shadow-md m-2 z-10"
           >
-            <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-blue-100 hover:text-blue-500">Aktivitas</button>
-            <button className="block w-full text-left px-2 py-1 rounded-sm hover:bg-blue-100 hover:text-blue-500">Pengguna</button>
+            <button 
+              onClick={() => handleSelect('access')} 
+              className="block w-full text-left px-4 py-2 hover:bg-blue-100 hover:text-blue-500"
+            >
+              Aktif
+            </button>
+            <button 
+              onClick={() => handleSelect('user')} 
+              className="block w-full text-left px-4 py-2 hover:bg-red-100 hover:text-red-500"
+            >
+              Nonaktif
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

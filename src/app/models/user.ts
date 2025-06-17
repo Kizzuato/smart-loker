@@ -13,6 +13,7 @@ export interface UserDocument {
   fingerprint_id: number;
   role: string;
   is_active: boolean;
+  device_id: mongoose.Types.ObjectId;
   registered_at: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -49,6 +50,7 @@ const UserSchema = new Schema<UserDocument>(
       enum: Object.values(UserRole),
       default: UserRole.USER,
     },
+    device_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Device' },
     is_active: { type: Boolean, default: true },
     registered_at: { type: Date, default: Date.now },
   },

@@ -7,10 +7,8 @@ import mongoose from 'mongoose';
 
 export async function GET() {
   await dbConnect();
-  // console.log("Registered Mongoose models:", mongoose.modelNames());
-
   try {
-    const items = await DeviceModel.find({});
+    const items = await DeviceModel.find({}).sort({ device_id: 1});
     return NextResponse.json({ success: true, data: items });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch items' }, { status: 400 });
