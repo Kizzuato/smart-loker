@@ -1,6 +1,6 @@
-'use client'
-import { useState } from 'react';
-import { FiSun, FiMoon, FiGrid, FiList, FiSearch, FiX, FiChevronLeft, FiChevronRight, FiCheck, FiEdit2, FiEye, FiTrash2, FiPlus } from 'react-icons/fi';
+"use client";
+
+import { useState } from "react";
 
 interface Device {
     _id: string;
@@ -16,6 +16,7 @@ interface User {
     name: string;
     email: string;
 }
+
 interface AccessLog {
     _id: string;
     user_id?: User;
@@ -27,105 +28,97 @@ interface AccessLog {
 }
 
 interface Props {
-    items: AccessLog[]
+    items: AccessLog[];
 }
 
-export default function ActivityTable({ items }: Props) {
+export default function ProductTable({ items }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
-    // Filter items based on search and category
-    const filteredProducts = items?.filter(item => {
-        const matchesSearch = item.user_id?.name.toLowerCase().includes(searchQuery.toLowerCase());
-        // const matchesCategory = !selectedCategory || item.category === selectedCategory;
-        return matchesSearch;
-    });
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
-    // Get unique categories
-    const categories = [...new Set(items?.map(item => item.status))];
+    // Filter
+    const filtered = items.filter(item =>
+        item.user_id?.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Pagination logic
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const currentData = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
-        <div className="grid grid-cols-1 gap-6 ">
-            <div className="bg-white border border-gray-200 shadow-md shadow-black/5 p-6 rounded-md">
+        <div className="grid grid-cols-1 gap-6">
+            <div className="bg-white border border-gray-200 shadow-md p-4 rounded-md">
+
                 <div className="overflow-x-auto">
+                    <div className="mb-5 flex justify-between items-center text-gray-400 p-2 bg-white rounded-md">
+                        <input
+                            type="text"
+                            placeholder="Cari nama..."
+                            value={searchQuery}
+                            onChange={e => {
+                                setSearchQuery(e.target.value);
+                                setCurrentPage(1); // reset ke halaman 1 saat search
+                            }}
+                            className="border px-3 py-1 rounded-md text-sm"
+                        />
+
+                        <div className="space-x-2">
+                            <button
+                                disabled={currentPage <= 1}
+                                onClick={() => setCurrentPage(prev => prev - 1)}
+                                className="px-3 py-1 text-sm border rounded disabled:opacity-50"
+                            >
+                                ← Prev
+                            </button>
+                            <button
+                                disabled={currentPage >= totalPages}
+                                onClick={() => setCurrentPage(prev => prev + 1)}
+                                className="px-3 py-1 text-sm border rounded disabled:opacity-50"
+                            >
+                                Next →
+                            </button>
+                            <span className="text-sm">Hal. {currentPage} dari {totalPages}</span>
+                        </div>
+                    </div>
                     <table className="w-full min-w-[460px]">
                         <thead>
                             <tr>
-                                <th
-                                    className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md"
-                                >
-                                    Device
-                                </th>
-                                <th
-                                    className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left"
-                                >
-                                    User
-                                </th>
-                                <th
-                                    className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md"
-                                >
-                                    Waktu akses
-                                </th>
-                                <th
-                                    className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md"
-                                >
-                                    Status
-                                </th>
-                                {/* <th
-                                    className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md"
-                                >
-                                    Aksi
-                                </th> */}
+                                <th className="text-xs font-medium text-gray-400 px-4 py-2 bg-gray-50 text-left">Device</th>
+                                <th className="text-xs font-medium text-gray-400 px-4 py-2 bg-gray-50 text-left">User</th>
+                                <th className="text-xs font-medium text-gray-400 px-4 py-2 bg-gray-50 text-left">Waktu Akses</th>
+                                <th className="text-xs font-medium text-gray-400 px-4 py-2 bg-gray-50 text-left">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {items?.map((item) => (
-                                <tr key={item._id}>
-                                    <td className="py-2 px-2 border-b border-b-gray-50">
-                                        <div className="flex items-center">
-                                            <span
-                                                className="text-gray-600 text-sm font-medium ml-2"
-                                            >{item.device_id?.device_id}</span
-                                            >
-                                        </div>
+                            {currentData.length === 0 ? (
+                                <tr>
+                                    <td colSpan={4} className="text-center py-4 text-sm text-gray-500">
+                                        Tidak ada data
                                     </td>
-                                    <td className="py-2 px-2 border-b border-b-gray-50">
-                                        <div className="flex items-center">
-                                            <span className="text-[13px] font-medium text-blue-500"
-                                            >{item.user_id?.name || 'Tidak Diketahui'}</span
-                                            >
-                                        </div>
-                                    </td>
-                                    <td className="py-2 px-2 border-b border-b-gray-50">
-                                        <div className="flex items-center">
-                                            <span
-                                                className="inline-block p-1 rounded bg-blue-500/10 text-blue-500 font-medium text-[12px] leading-none"
-                                            >{item.access_time ? new Date(item.access_time).toLocaleString('id-ID', {
-                                                dateStyle: 'short',
-                                                timeStyle: 'short'
-                                            }) : 'Waktu tidak diketahui'}
-
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className="py-2 px-2 border-b border-b-gray-50">
-                                        <div className="flex items-center">
-                                            <span className={`inline-block p-1 rounded text-[12px] font-medium leading-none ${item.status === 'success'
-                                                ? 'bg-blue-500/10 text-blue-500'
-                                                : 'bg-red-500/10 text-red-500'
-                                                }`}>
+                                </tr>
+                            ) : (
+                                currentData.map((item) => (
+                                    <tr key={item._id}>
+                                        <td className="py-2 px-4 text-xs">{item.device_id.device_id}</td>
+                                        <td className="py-2 px-4 text-xs text-blue-500">{item.user_id?.name || 'Tidak Diketahui'}</td>
+                                        <td className="py-2 px-4 text-xs">
+                                            {item.access_time
+                                                ? new Date(item.access_time).toLocaleString('id-ID', {
+                                                    dateStyle: 'short',
+                                                    timeStyle: 'short',
+                                                })
+                                                : 'Waktu tidak diketahui'}
+                                        </td>
+                                        <td className="py-2 px-4">
+                                            <span className={`inline-block px-2 py-1 text-xs rounded ${item.status === 'success'
+                                                ? 'bg-blue-100 text-blue-600'
+                                                : 'bg-red-100 text-red-600'}`}>
                                                 {item.status}
                                             </span>
-                                        </div>
-                                    </td>
-                                    {/* <td className="py-2 px-4 border-b border-b-gray-50">
-                                        <button
-                                            type="button"
-                                            className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-2 focus:ring-green-300 font-small rounded-md text-xs px-3 py-1.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                                        >
-                                            Details
-                                        </button>
-                                    </td> */}
-                                </tr>
-                            ))}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -10,14 +10,14 @@ export async function GET() {
     const file = await fs.readFile(filePath, 'utf-8')
     return NextResponse.json(JSON.parse(file))
   } catch (error) {
-    return NextResponse.json({ delete_mode: false }) // fallback
+    return NextResponse.json({ enroll_mode: false }) // fallback
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const { delete_mode } = await req.json()
-    await fs.writeFile(filePath, JSON.stringify({ delete_mode }))
+    const { enroll_mode } = await req.json()
+    await fs.writeFile(filePath, JSON.stringify({ enroll_mode }))
     return NextResponse.json({ success: true })
   } catch (err) {
     return NextResponse.json({ success: false }, { status: 500 })

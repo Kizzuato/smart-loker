@@ -37,16 +37,15 @@ export default function UserTable({
   device,
 }: {
   usersById: User[];
-  device?: String;
+  device?: string;
 }) {
-
   const [searchQuery, setSearchQuery] = useState("");
   const [items, setItems] = useState<User[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [slots, setSlots] = useState<FingerprintSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [selectedUser, setSelectedUser] = useState<string>("");
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<User[]>([]);
 
   const fetchUsers = async () => {
     try {
@@ -54,7 +53,6 @@ export default function UserTable({
       const data = await res.json();
       if (data.success) {
         setUsers(data.data);
-        console.log(data.data);
       }
     } catch (err) {
       console.error('Failed to fetch users:', err);
@@ -62,18 +60,16 @@ export default function UserTable({
   };
 
   useEffect(() => {
-
     fetchUsers();
   }, []);
 
-
   useEffect(() => {
-    setItems(usersById); // ambil data usersById dari props
+    setItems(usersById);
   }, [usersById]);
 
   const openModal = async () => {
     try {
-      handleEnroll();
+      await handleEnroll();
       setIsModalOpen(true);
     } catch (err) {
       console.error("Failed to open modal:", err);
@@ -89,9 +85,8 @@ export default function UserTable({
       });
 
       if (res.ok) {
-        const result = await res.json();
-        await fetchUsers(); // ambil data terbaru
-        setIsModalOpen(false); // tutup modal
+        await fetchUsers();
+        setIsModalOpen(false);
         setSelectedSlot(null);
         setSelectedUser("");
         Swal.fire({
@@ -100,39 +95,25 @@ export default function UserTable({
           text: 'User berhasil didaftarkan',
           showConfirmButton: false,
           timer: 2000,
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp'
-          }
-        }).then(() => {
-          window.location.reload();
-        });;
+          showClass: { popup: 'animate__animated animate__fadeInDown' },
+          hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+        }).then(() => window.location.reload());
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Gagal',
           text: 'Terjadi kesalahan saat mendaftarkan user',
-          showClass: {
-            popup: 'animate__animated animate__shakeX'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOut'
-          }
+          showClass: { popup: 'animate__animated animate__shakeX' },
+          hideClass: { popup: 'animate__animated animate__fadeOut' }
         });
       }
     } catch (err) {
       console.error("Enrollment failed:", err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Terjadi kesalahan saat menghubungi server',
-      });
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan saat menghubungi server' });
     }
   };
 
-  const delUser = async (id_user: string) => {
+  const delUser = async (id_user: string, fingerprint_id: number) => {
     const confirm = await Swal.fire({
       title: 'Yakin ingin menghapus user ini?',
       text: "Tindakan ini tidak dapat dibatalkan.",
@@ -147,56 +128,41 @@ export default function UserTable({
     if (!confirm.isConfirmed) return;
 
     try {
+      await handleDelete(fingerprint_id);
       const res = await fetch(`/api/users/${id_user}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ device_id: null, fingerprint_id: null })
       });
 
-      console.log("TES: ", id_user);
       if (res.ok) {
-        const result = await res.json();
-        setIsModalOpen(false);
+        await fetchUsers();
         Swal.fire({
           icon: 'success',
           title: 'Berhasil',
           text: 'User berhasil dihapus',
           showConfirmButton: false,
           timer: 2000,
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp'
-          }
-        }).then(() => {
-          window.location.reload();
-        });
+          showClass: { popup: 'animate__animated animate__fadeInDown' },
+          hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+        }).then(() => window.location.reload());
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Gagal',
           text: 'Terjadi kesalahan saat menghapus user',
-          showClass: {
-            popup: 'animate__animated animate__shakeX'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOut'
-          }
+          showClass: { popup: 'animate__animated animate__shakeX' },
+          hideClass: { popup: 'animate__animated animate__fadeOut' }
         });
       }
     } catch (err) {
-      console.error("Enrollment failed:", err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Terjadi kesalahan saat menghubungi server',
-      });
+      console.error("Delete failed:", err);
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan saat menghubungi server' });
     }
   };
 
-
   const handleEnroll = async () => {
+    if (!selectedSlot) return;
     try {
       await fetch("/api/enroll-mode", {
         method: "POST",
@@ -220,6 +186,29 @@ export default function UserTable({
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      await fetch("/api/delete-mode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delete_mode: true, fingerprint_id: id })
+      });
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
+  };
+
+  const cancelDelete = async () => {
+    try {
+      await fetch("/api/delete-mode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delete_mode: false })
+      });
+    } catch (err) {
+      console.error("Gagal menonaktifkan delete mode:", err);
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 gap-6">
@@ -241,7 +230,7 @@ export default function UserTable({
                 <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Fingerprint ID</th>
                 <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Role</th>
                 <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Aktif</th>
-                <th className="text-[12px] uppeonClick={delUser}rcase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Aksi</th>
+                <th className="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -273,7 +262,7 @@ export default function UserTable({
                     <td className="flex gap-2 text-center py-2">
                       {/* <button className="bg-transparent hover:bg-blue-500 text-blue-700 hover:text-white text-sm py-1 px-2 border border-blue-500 hover:border-transparent rounded">Detail</button> */}
                       <button className="bg-transparent hover:bg-red-500 text-red-700 hover:text-white text-sm py-1 px-2 border border-red-500 hover:border-transparent rounded"
-                        onClick={() => delUser(user._id)}
+                        onClick={() => delUser(user._id, user.fingerprint_id || 0)}
                       >Hapus</button>
                     </td>
                   </tr>
@@ -328,7 +317,10 @@ export default function UserTable({
                 Batal
               </button>
               <button
-                onClick={addUser}
+                onClick={async () => {
+                  await addUser();
+                  cancelEnroll();
+                }}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
               >
                 Simpan

@@ -15,7 +15,6 @@ export default function LandingPage() {
   // Efek untuk menghindari flash pada mode pertama render
   useEffect(() => {
     setMounted(true);
-    // Cek preferensi user dari localStorage atau sistem
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode === 'true' || (!savedMode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       setDarkMode(true);
